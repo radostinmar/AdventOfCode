@@ -18,7 +18,12 @@ fun String.md5() = BigInteger(1, MessageDigest.getInstance("MD5").digest(toByteA
 /**
  * The cleaner shorthand for printing output.
  */
-fun <T>T.println(): T {
+fun <T> T.println(): T {
     println(this)
     return this
 }
+
+val List<Int>.product: Int
+    get() = this.reduce { acc, cur ->
+        acc * cur
+    }
