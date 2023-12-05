@@ -1,179 +1,53 @@
-data class MapEntry(
-    val srcStart: Long,
-    val length: Long,
-    val dstStart: Long
-)
-
-data class SeedEntry(
-    val start: Long,
-    val length: Long
-)
-
-fun List<MapEntry>.get(num: Long): Long =
-    this.find { num >= it.srcStart && num < it.srcStart + it.length }?.let {
-        (num - it.srcStart) + it.dstStart
-    } ?: num
-
-
-fun main() {
-
-    fun part1(input: List<String>): Long {
-        var seeds = emptyList<Long>()
-        val seedToSoilMap = mutableListOf<MapEntry>()
-        val soilToFertilizerMap = mutableListOf<MapEntry>()
-        val fertilizerToWaterMap = mutableListOf<MapEntry>()
-        val waterToLightMap = mutableListOf<MapEntry>()
-        val lightToTemperatureMap = mutableListOf<MapEntry>()
-        val temperatureToHumidityMap = mutableListOf<MapEntry>()
-        val humidityToLocationMap = mutableListOf<MapEntry>()
-        var currentMap = seedToSoilMap
-        input.forEach { line ->
-            if (line.isNotEmpty()) {
-                when {
-                    line.startsWith("seeds:") -> {
-                        seeds = line.substringAfter("seeds: ").split(" ").map { it.toLong() }
-                    }
-
-                    line == "seed-to-soil map:" -> {
-                        currentMap = seedToSoilMap
-                    }
-
-                    line == "soil-to-fertilizer map:" -> {
-                        currentMap = soilToFertilizerMap
-                    }
-
-                    line == "fertilizer-to-water map:" -> {
-                        currentMap = fertilizerToWaterMap
-                    }
-
-                    line == "water-to-light map:" -> {
-                        currentMap = waterToLightMap
-                    }
-
-                    line == "light-to-temperature map:" -> {
-                        currentMap = lightToTemperatureMap
-                    }
-
-                    line == "temperature-to-humidity map:" -> {
-                        currentMap = temperatureToHumidityMap
-                    }
-
-                    line == "humidity-to-location map:" -> {
-                        currentMap = humidityToLocationMap
-                    }
-
-                    else -> {
-                        val numbers = line.split(" ").map { it.toLong() }
-                        val dstStart = numbers[0]
-                        val srcStart = numbers[1]
-                        val length = numbers[2]
-                        currentMap.add(MapEntry(srcStart, length, dstStart))
-                    }
-                }
-            }
-        }
-        return seeds.minOf { seed ->
-            seedToSoilMap.get(seed).let { soil ->
-                soilToFertilizerMap.get(soil).let { fertilizer ->
-                    fertilizerToWaterMap.get(fertilizer).let { water ->
-                        waterToLightMap.get(water).let { light ->
-                            lightToTemperatureMap.get(light).let { temp ->
-                                temperatureToHumidityMap.get(temp).let { humidity ->
-                                    humidityToLocationMap.get(humidity)
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+object Day05 : Day() {
+    private data class Mapping(val src: Long, val dst: Long, val size: Long) {
+        fun mapValue(value: Long): Long? = if (value in src..(src + size)) {
+            value + dst - src
+        } else {
+            null
         }
     }
 
-    fun part2(input: List<String>): Long {
-        var seeds = emptyList<SeedEntry>()
-        val seedToSoilMap = mutableListOf<MapEntry>()
-        val soilToFertilizerMap = mutableListOf<MapEntry>()
-        val fertilizerToWaterMap = mutableListOf<MapEntry>()
-        val waterToLightMap = mutableListOf<MapEntry>()
-        val lightToTemperatureMap = mutableListOf<MapEntry>()
-        val temperatureToHumidityMap = mutableListOf<MapEntry>()
-        val humidityToLocationMap = mutableListOf<MapEntry>()
-        var currentMap = seedToSoilMap
-        input.forEach { line ->
-            if (line.isNotEmpty()) {
-                when {
-                    line.startsWith("seeds:") -> {
-                        seeds = line.substringAfter("seeds: ")
-                            .split(" ")
-                            .map { it.toLong() }
-                            .chunked(2)
-                            .map { SeedEntry(it[0], it[1]) }
-                    }
+    private fun List<Mapping>.mapValue(value: Long): Long = this.firstNotNullOfOrNull { it.mapValue(value) } ?: value
 
-                    line == "seed-to-soil map:" -> {
-                        currentMap = seedToSoilMap
-                    }
-
-                    line == "soil-to-fertilizer map:" -> {
-                        currentMap = soilToFertilizerMap
-                    }
-
-                    line == "fertilizer-to-water map:" -> {
-                        currentMap = fertilizerToWaterMap
-                    }
-
-                    line == "water-to-light map:" -> {
-                        currentMap = waterToLightMap
-                    }
-
-                    line == "light-to-temperature map:" -> {
-                        currentMap = lightToTemperatureMap
-                    }
-
-                    line == "temperature-to-humidity map:" -> {
-                        currentMap = temperatureToHumidityMap
-                    }
-
-                    line == "humidity-to-location map:" -> {
-                        currentMap = humidityToLocationMap
-                    }
-
-                    else -> {
-                        val numbers = line.split(" ").map { it.toLong() }
-                        val dstStart = numbers[0]
-                        val srcStart = numbers[1]
-                        val length = numbers[2]
-                        currentMap.add(MapEntry(srcStart, length, dstStart))
-                    }
-                }
+    private fun getMappings(grouped: List<List<String>>, reversed: Boolean = false): List<List<Mapping>> =
+        grouped.drop(1).map {
+            it.drop(1).map { mapping ->
+                val split = mapping.split(" ").toLongs()
+                Mapping(
+                    src = if (reversed) split[0] else split[1],
+                    dst = if (reversed) split[1] else split[0],
+                    size = split[2]
+                )
             }
-        }
-        var min = Long.MAX_VALUE
+        }.let { if (reversed) it.reversed() else it }
 
-        seeds.forEach {
-             repeat(it.length.toInt()) { index ->
-                seedToSoilMap.get(it.start + index).let { soil ->
-                    soilToFertilizerMap.get(soil).let { fertilizer ->
-                        fertilizerToWaterMap.get(fertilizer).let { water ->
-                            waterToLightMap.get(water).let { light ->
-                                lightToTemperatureMap.get(light).let { temp ->
-                                    temperatureToHumidityMap.get(temp).let { humidity ->
-                                        humidityToLocationMap.get(humidity).let {
-                                            if(it < min) min = it
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+    override fun part1(): Long {
+        val grouped = lines.split("")
+        val seeds = grouped.first().first().split(" ").drop(1).toLongs()
+        val mappings = getMappings(grouped)
+        return seeds.minOf {
+            var currentValue = it
+            mappings.forEach { mapping ->
+                currentValue = mapping.mapValue(currentValue)
             }
+            currentValue
         }
-
-        return min
     }
 
-    val input = readInput("Day05")
-    part1(input).println()
-    part2(input).println()
+    override fun part2(): Long {
+        val grouped = lines.split("")
+        val seeds = grouped.first().first().split(" ").drop(1).toLongs().chunked(2)
+        val mappings = getMappings(grouped, reversed = true)
+        var testVal = 0L
+        while (true) {
+            var current = testVal
+            mappings.forEach { mapping ->
+                current = mapping.mapValue(current)
+            }
+            if (seeds.any { current in it[0].until(it[0] + it[1]) }) {
+                return testVal
+            }
+            testVal++
+        }
+    }
 }

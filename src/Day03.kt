@@ -1,16 +1,16 @@
-fun main() {
+object Day03 : Day() {
 
-    fun areAdjacent(sRow: Int, sCol: Int, numRow: Int, numCols: IntRange): Boolean =
+    private fun areAdjacent(sRow: Int, sCol: Int, numRow: Int, numCols: IntRange): Boolean =
         (sRow == numRow && (sCol == numCols.first - 1 || sCol == numCols.last + 1))
                 || (sRow == numRow - 1 && sCol in (numCols.first - 1)..(numCols.last + 1))
                 || (sRow == numRow + 1 && sCol in (numCols.first - 1)..(numCols.last + 1))
 
-    fun part1(input: List<String>): Int {
-        val symbols = input.flatMapIndexed { index: Int, s: String ->
+    override fun part1(): Int {
+        val symbols = lines.flatMapIndexed { index: Int, s: String ->
             Regex("[^0-9.]").findAll(s).map { index to it.range.first }
         }.toSet()
 
-        return input.flatMapIndexed { index: Int, s: String ->
+        return lines.flatMapIndexed { index: Int, s: String ->
             Regex("[0-9]+").findAll(s).map { index to it }
         }.sumOf { (numRow, matchResult) ->
             val hasAdjacent = symbols.any { (sRow, sCol) ->
@@ -20,12 +20,12 @@ fun main() {
         }
     }
 
-    fun part2(input: List<String>): Int {
-        val numbers = input.flatMapIndexed { index: Int, s: String ->
+    override fun part2(): Int {
+        val numbers = lines.flatMapIndexed { index: Int, s: String ->
             Regex("[0-9]+").findAll(s).map { index to it }
         }
 
-        return input.flatMapIndexed { index: Int, s: String ->
+        return lines.flatMapIndexed { index: Int, s: String ->
             Regex("\\*").findAll(s).map { index to it.range.first }
         }.sumOf { (sRow, sCol) ->
             val adjacent = numbers.filter { (numRow, matchResult) ->
@@ -38,8 +38,4 @@ fun main() {
             }
         }
     }
-
-    val input = readInput("Day03")
-    part1(input).println()
-    part2(input).println()
 }

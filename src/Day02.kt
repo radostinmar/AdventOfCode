@@ -1,6 +1,6 @@
-fun main() {
+object Day02 : Day() {
 
-    fun part1(input: List<String>): Int = input.sumOf { game ->
+    override fun part1(): Int = lines.sumOf { game ->
         val valid = game.substringAfter(": ").split("; ").none { subset ->
             subset.split(", ").any { cubes ->
                 val color = cubes.substringAfter(" ")
@@ -21,7 +21,7 @@ fun main() {
     }
 
 
-    fun part2(input: List<String>): Int =input.sumOf { game ->
+    override fun part2(): Int = lines.sumOf { game ->
         var redMax = Int.MIN_VALUE
         var greenMax = Int.MIN_VALUE
         var blueMax = Int.MIN_VALUE
@@ -30,16 +30,12 @@ fun main() {
                 val color = cubes.substringAfter(" ")
                 val amount = cubes.substringBefore(" ").toInt()
                 when (color) {
-                    "red" -> if(amount > redMax) redMax = amount
-                    "green" -> if(amount > greenMax) greenMax = amount
-                    "blue" -> if(amount > blueMax) blueMax = amount
+                    "red" -> if (amount > redMax) redMax = amount
+                    "green" -> if (amount > greenMax) greenMax = amount
+                    "blue" -> if (amount > blueMax) blueMax = amount
                 }
             }
         }
-        redMax * blueMax *greenMax
+        redMax * blueMax * greenMax
     }
-
-    val input = readInput("Day02")
-    part1(input).println()
-    part2(input).println()
 }

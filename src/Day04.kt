@@ -1,17 +1,16 @@
 import kotlin.math.pow
 
-data class Card(
-    val winning: Set<Int>,
-    val numbers: List<Int>,
-    val index: Int
-) {
-    val matches: Int
-        get() = numbers.count { it in winning }
-}
+object Day04 : Day() {
+    private data class Card(
+        val winning: Set<Int>,
+        val numbers: List<Int>,
+        val index: Int
+    ) {
+        val matches: Int
+            get() = numbers.count { it in winning }
+    }
 
-fun main() {
-
-    fun part1(input: List<String>): Int = input.sumOf { card ->
+    override fun part1(): Int = lines.sumOf { card ->
         val winning = card
             .replace(" +".toRegex(), " ")
             .substringAfter(": ")
@@ -30,8 +29,8 @@ fun main() {
         2f.pow(matching - 1).toInt()
     }
 
-    fun part2(input: List<String>): Int {
-        val original = input.mapIndexed { index, card ->
+    override fun part2(): Int {
+        val original = lines.mapIndexed { index, card ->
             val winning = card
                 .replace(" +".toRegex(), " ")
                 .substringAfter(": ")
@@ -63,8 +62,4 @@ fun main() {
 
         return all.size
     }
-
-    val input = readInput("Day04")
-    part1(input).println()
-    part2(input).println()
 }
