@@ -26,10 +26,13 @@ fun <T> T.println(): T {
     return this
 }
 
-val List<Int>.product: Int
+val Iterable<Int>.product: Int
     get() = this.reduce { acc, cur ->
         acc * cur
     }
+
+fun <T> List<T>.productOf(selector: (T) -> Int): Int =
+    this.map { selector(it) }.product
 
 fun <T> List<T>.split(delimiter: T): List<List<T>> {
     var currentOffset = 0
