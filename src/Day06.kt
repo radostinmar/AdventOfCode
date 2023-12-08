@@ -1,14 +1,10 @@
 import kotlin.math.ceil
 import kotlin.math.floor
-import kotlin.math.pow
-import kotlin.math.sqrt
 
 object Day06 : Day() {
 
     private fun findPossible(time: Long, distance: Long): Long {
-        val d = time.toDouble().pow(2) - 4 * distance
-        val x1 = (time + sqrt(d)) / 2
-        val x2 = (time - sqrt(d)) / 2
+        val (x1, x2) = quadratic(1.0, -time.toDouble(), distance.toDouble())
         return floor(x1 - 0.00000001).toLong() - ceil(x2 + 0.00000001).toLong() + 1
     }
 

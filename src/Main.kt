@@ -1,3 +1,1 @@
-fun main() {
-    Day07()
-}
+fun main(): Unit = Day08()
