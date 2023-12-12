@@ -1,4 +1,43 @@
+package y2023
+
+import Day
+
 object Day10 : Day() {
+
+    fun visualize() {
+        val charMap = mapOf(
+            '|' to '┃',
+            'J' to '┛',
+            'L' to '┗',
+            '7' to '┓',
+            'F' to '┏',
+            '-' to '━'
+        )
+        val loop = getLoop()
+        val inside = lines.flatMapIndexed { row, line ->
+            var inside = false
+            line.mapIndexedNotNull { col, char ->
+                val node = Node(row, col)
+                val inLoop = node in loop
+                val shouldChange = inLoop && node.hasTopDirection
+                if (shouldChange) inside = !inside
+                if (!inLoop && inside) row to col else null
+            }
+        }.toSet()
+        lines.forEachIndexed { row, line ->
+            line.forEachIndexed { col, c ->
+                val node = Node(row, col)
+                val newChar = when {
+                    c == 'S' -> 'S'
+                    node in loop -> charMap[c] ?: ' '
+                    (row to col) in inside -> '#'
+                    else -> ' '
+                }
+                print(newChar)
+            }
+            println("")
+        }
+    }
 
     private enum class Direction {
         LEFT, RIGHT, TOP, BOTTOM

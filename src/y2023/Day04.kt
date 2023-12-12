@@ -1,3 +1,6 @@
+package y2023
+
+import Day
 import kotlin.math.pow
 
 object Day04 : Day() {

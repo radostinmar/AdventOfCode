@@ -1,3 +1,7 @@
+package y2023
+
+import Day
+
 object Day01 : Day() {
     private val wordsToDigits = mapOf(
         "one" to "1",

@@ -1,3 +1,7 @@
+package y2023
+
+import Day
+
 object Day02 : Day() {
 
     override fun part1(): Int = lines.sumOf { game ->

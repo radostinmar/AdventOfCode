@@ -1,3 +1,3 @@
 fun main() {
-    Day11()
+    y2023.Day12()
 }

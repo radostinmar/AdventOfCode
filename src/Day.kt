@@ -1,8 +1,10 @@
+import util.readLines
+import util.readText
 import kotlin.system.measureTimeMillis
 
 abstract class Day(isTest: Boolean = false) {
 
-    private val file: String = if (isTest) "test" else this::class.simpleName.orEmpty()
+    private val file: String = if (isTest) "y2023/test" else "y2023/${this::class.simpleName.orEmpty()}"
 
     protected val lines: List<String> by lazy { readLines(file) }
 

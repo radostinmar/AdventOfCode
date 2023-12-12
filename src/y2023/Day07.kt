@@ -1,3 +1,7 @@
+package y2023
+
+import Day
+
 object Day07 : Day() {
     private val normalSuitMap = mapOf(
         'A' to 12,

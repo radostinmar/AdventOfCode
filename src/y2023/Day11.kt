@@ -1,6 +1,9 @@
+package y2023
+
+import Day
 import kotlin.math.abs
 
-object Day11 : Day(isTest = false) {
+object Day11 : Day() {
 
     private fun distance(
         first: Pair<Int, Int>,
@@ -36,7 +39,6 @@ object Day11 : Day(isTest = false) {
             }
         }
     }
-
 
     override fun part1(): Number = solve(expansion = 1)
 

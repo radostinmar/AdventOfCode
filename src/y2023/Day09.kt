@@ -1,3 +1,8 @@
+package y2023
+
+import Day
+import util.toInts
+
 object Day09 : Day() {
     private fun generateNext(numbers: List<Int>): List<Int>? =
         if (numbers.all { it == 0 }) {
@@ -11,7 +16,7 @@ object Day09 : Day() {
         }
 
     private fun solve(isFirst: Boolean): Int = lines.sumOf { line ->
-        generateSequence(line.split(" ").toInts(), ::generateNext)
+        generateSequence(line.split(" ").toInts(), Day09::generateNext)
             .toList()
             .reversed()
             .fold(0) { acc, current ->

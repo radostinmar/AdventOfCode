@@ -1,3 +1,8 @@
+package y2023
+
+import Day
+import util.lcm
+
 object Day08 : Day(isTest = false) {
     private fun applyInstructions(
         instructions: String,

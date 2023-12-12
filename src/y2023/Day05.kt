@@ -1,3 +1,9 @@
+package y2023
+
+import Day
+import util.split
+import util.toLongs
+
 object Day05 : Day() {
     private data class Mapping(val src: Long, val dst: Long, val size: Long) {
         fun mapValue(value: Long): Long? = if (value in src..(src + size)) {

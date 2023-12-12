@@ -1,3 +1,8 @@
+package y2023
+
+import Day
+import util.product
+
 object Day03 : Day() {
 
     private fun areAdjacent(sRow: Int, sCol: Int, numRow: Int, numCols: IntRange): Boolean =
