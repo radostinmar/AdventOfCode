@@ -1,22 +1,24 @@
 package y2023
 
 import Day
-import kotlin.math.abs
+import util.Node
+import util.manhattan
+import util.nodeTo
 
 object Day11 : Day() {
 
     private fun distance(
-        first: Pair<Int, Int>,
-        second: Pair<Int, Int>,
+        first: Node,
+        second: Node,
         emptyRows: List<Int>,
         emptyCols: List<Int>,
         expansion: Long
     ): Long {
         val expandedRows =
-            emptyRows.count { it in first.first..second.first || it in second.first..first.first } * expansion
+            emptyRows.count { it in first.x..second.x || it in second.x..first.x } * expansion
         val expandedCols =
-            emptyCols.count { it in first.second..second.second || it in second.second..first.second } * expansion
-        return abs(first.first - second.first) + abs(first.second - second.second) + expandedRows + expandedCols
+            emptyCols.count { it in first.y..second.y || it in second.y..first.y } * expansion
+        return manhattan(first, second) + expandedRows + expandedCols
     }
 
     private fun solve(expansion: Long): Number {
@@ -30,7 +32,7 @@ object Day11 : Day() {
 
         val galaxies = lines.flatMapIndexed { row, chars ->
             chars.mapIndexedNotNull { col, c ->
-                if (c == '#') row to col else null
+                if (c == '#') row nodeTo col else null
             }
         }
         return galaxies.withIndex().sumOf { galaxy ->
