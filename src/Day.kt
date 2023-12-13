@@ -14,9 +14,9 @@ abstract class Day(
 
     protected val text: String by lazy { readText(file) }
 
-    protected open fun part1(): Number = 0
+    protected open fun part1(): Any = ""
 
-    protected open fun part2(): Number = 0
+    protected open fun part2(): Any = ""
 
     operator fun invoke() {
         println("● ${this::class.simpleName.orEmpty()}")
