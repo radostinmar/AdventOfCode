@@ -84,3 +84,13 @@ private fun lcm(first: Long, second: Long): Long =
     first * (second / gcd(first, second))
 
 fun List<Long>.lcm(): Long = reduce(::lcm)
+
+fun <T> List<List<T>>.transposed(): List<List<T>> =
+    this.first().indices.map { index ->
+        this.map { it[index] }
+    }
+
+fun List<String>.stringsTransposed(): List<String> =
+    this.first().indices.map { index ->
+        this.map { it[index] }.toString()
+    }
