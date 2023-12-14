@@ -3,16 +3,7 @@ package y2022
 import Day
 import kotlin.math.pow
 
-// 9 - 2- - 2 * 5 + 1 * -1
-// 10 - 20 - 2 * 5 + 1 * 0
-// 11 - 21 - 2 * 5 + 1 * 1
-// 12 - 21 - 2 * 5 + 1 * 2
-// 13 - 1== - 1 * 25 + -2 * 5 + 1 * - 2 / 1==
-// 14 - 1=- - 1 * 25 + -2 * 5 + 1 * -1
-// 15 - 1=0 - 1 * 25 + -2 * 5 + 1 * -1
-// 33 - 113
-
-object Day25 : Day(isTest = false, year = 2022) {
+object Day25 : Day(year = 2022) {
 
     private val charMap = mapOf(
         '2' to 2,

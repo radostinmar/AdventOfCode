@@ -1,30 +1,15 @@
 package util
 
-import java.math.BigInteger
-import java.security.MessageDigest
 import kotlin.io.path.Path
 import kotlin.io.path.readLines
 import kotlin.io.path.readText
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-/**
- * Reads lines from the given input txt file.
- */
 fun readLines(name: String) = Path("src/$name.txt").readLines()
 
 fun readText(name: String) = Path("src/$name.txt").readText()
 
-/**
- * Converts string to md5 hash.
- */
-fun String.md5() = BigInteger(1, MessageDigest.getInstance("MD5").digest(toByteArray()))
-    .toString(16)
-    .padStart(32, '0')
-
-/**
- * The cleaner shorthand for printing output.
- */
 fun <T> T.println(): T {
     println(this)
     return this
@@ -56,10 +41,6 @@ fun <T> List<T>.split(delimiter: T): List<List<T>> {
     return result
 }
 
-fun List<String>.toLongs(): List<Long> = this.map { it.toLong() }
-
-fun List<String>.toInts(): List<Int> = this.map { it.toInt() }
-
 fun quadratic(a: Double, b: Double, c: Double): Pair<Double, Double> {
     val d = b.pow(2) - 4 * a * c
     val x1 = (-b + sqrt(d)) / (2 * a)
@@ -90,7 +71,7 @@ fun <T> List<List<T>>.transposed(): List<List<T>> =
         this.map { it[index] }
     }
 
-fun List<String>.stringsTransposed(): List<String> =
-    this.first().indices.map { index ->
-        this.map { it[index] }.toString()
+fun <T> accumulate(times: Int, initial: T, operation: (acc: T, index: Int) -> T): T =
+    List(times) { it }.fold(initial) { acc, index ->
+        operation(acc, index)
     }

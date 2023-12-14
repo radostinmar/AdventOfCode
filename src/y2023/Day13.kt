@@ -1,7 +1,7 @@
 package y2023
 
 import Day
-import util.stringsTransposed
+import util.transposed
 import kotlin.math.min
 
 object Day13 : Day(isTest = false) {
@@ -18,7 +18,7 @@ object Day13 : Day(isTest = false) {
     private fun solve(matchCondition: (List<String>, List<String>) -> Boolean): Int =
         text.split("\\R{2}".toRegex()).map { it.split("\\R".toRegex()) }
             .sumOf { pattern ->
-                pattern.findMirror(matchCondition) * 100 + pattern.stringsTransposed().findMirror(matchCondition)
+                pattern.findMirror(matchCondition) * 100 + pattern.transposed().findMirror(matchCondition)
             }
 
     override fun part1(): Number = solve { list1, list2 -> list1 == list2 }
