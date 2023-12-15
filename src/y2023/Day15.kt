@@ -2,7 +2,7 @@ package y2023
 
 import Day
 
-object Day15 : Day(isTest = false) {
+object Day15 : Day() {
 
     private fun hash(string: String): Int =
         string.fold(0) { acc, cur ->
@@ -11,27 +11,23 @@ object Day15 : Day(isTest = false) {
 
     override fun part1(): Any = lines.first().split(',').sumOf(::hash)
 
-    override fun part2(): Any {
-        val boxes = mutableMapOf<Int, Map<String, Int>>()
-        lines.first().split(',').forEach { entry ->
+    override fun part2(): Any =
+        lines.first().split(',').fold(mutableMapOf<Int, Map<String, Int>>()) { acc, entry ->
             when {
                 '=' in entry -> {
                     val (label, focalLength) = entry.split('=')
-                    val hash = hash(label)
-                    boxes.merge(hash, mapOf(label to focalLength.toInt()), Map<String, Int>::plus)
+                    acc.merge(hash(label), mapOf(label to focalLength.toInt()), Map<String, Int>::plus)
                 }
 
                 '-' in entry -> {
                     val label = entry.substringBefore('-')
-                    val hash = hash(label)
-                    boxes[hash]?.filterKeys { it != label }?.let { boxes[hash] = it }
+                    acc.computeIfPresent(hash(label)) { _, value -> value.filterKeys { it != label } }
                 }
             }
-        }
-        return boxes.toList().sumOf { (boxNumber, box) ->
+            acc
+        }.toList().sumOf { (boxNumber, box) ->
             box.toList().withIndex().sumOf { (index, entry) ->
                 (boxNumber + 1) * (index + 1) * entry.second
             }
         }
-    }
 }
