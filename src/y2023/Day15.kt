@@ -12,20 +12,20 @@ object Day15 : Day() {
     override fun part1(): Any = lines.first().split(',').sumOf(::hash)
 
     override fun part2(): Any =
-        lines.first().split(',').fold(mutableMapOf<Int, Map<String, Int>>()) { acc, entry ->
+        lines.first().split(',').fold(MutableList(256) { (mapOf<String, Int>()) }) { acc, entry ->
             when {
                 '=' in entry -> {
                     val (label, focalLength) = entry.split('=')
-                    acc.merge(hash(label), mapOf(label to focalLength.toInt()), Map<String, Int>::plus)
+                    acc[hash(label)] += mapOf(label to focalLength.toInt())
                 }
 
                 '-' in entry -> {
                     val label = entry.substringBefore('-')
-                    acc.computeIfPresent(hash(label)) { _, value -> value.filterKeys { it != label } }
+                    acc[hash(label)] = acc[hash(label)] - label
                 }
             }
             acc
-        }.toList().sumOf { (boxNumber, box) ->
+        }.withIndex().sumOf { (boxNumber, box) ->
             box.toList().withIndex().sumOf { (index, entry) ->
                 (boxNumber + 1) * (index + 1) * entry.second
             }
