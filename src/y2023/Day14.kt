@@ -1,24 +1,25 @@
 package y2023
 
 import Day
-import util.accumulate
+import util.swap
 import util.transposedToChars
-import java.util.Collections.swap
 
 object Day14 : Day() {
 
     private fun List<List<Char>>.roll(): List<List<Char>> =
         this.map { line ->
-            line.forEachIndexed { index, c ->
+            val updated = line.toMutableList()
+            updated.forEachIndexed { index, c ->
                 if (c == 'O') {
-                    val reverseIndex = line.subList(0, index).reversed().indexOfFirst { charAbove ->
-                        charAbove == 'O' || charAbove == '#'
-                    }.takeIf { it != -1 } ?: index
+                    val reverseIndex = updated.subList(0, index)
+                        .reversed()
+                        .indexOfFirst { it != '.' }
+                        .takeIf { it != -1 } ?: index
                     val foundIndex = index - reverseIndex
-                    swap(line, index, foundIndex)
+                    updated.swap(index, foundIndex)
                 }
             }
-            line
+            updated
         }
 
     private fun List<List<Char>>.calculateWeight(): Int =
@@ -43,31 +44,22 @@ object Day14 : Day() {
             .roll().rotate()
             .roll().rotate()
 
-    private fun detectCycle(numbers: List<Int>): Int {
-        var size = 1
-        val reversed = numbers.reversed()
-        while (true) {
-            if (size + size >= numbers.size) {
-                return -1
-            }
-            if (reversed.subList(0, size) == reversed.subList(size, size + size)) {
-                return size
-            }
-            size++
-        }
-    }
-
     override fun part1(): Any =
         lines.transposedToChars().roll().calculateWeight()
 
     override fun part2(): Any {
         var current = lines.transposedToChars()
-        val testIterations = 300
-        val results = accumulate(testIterations, listOf(current.calculateWeight())) { acc, _ ->
+        val results = mutableListOf<List<List<Char>>>()
+
+        while (true) {
+            if (current in results) {
+                break
+            }
+            results.add(current)
             current = current.cycle()
-            acc + current.calculateWeight()
         }
-        val cycleLength = detectCycle(results)
-        return results[1000000000 % cycleLength + (testIterations / cycleLength - 1) * cycleLength]
+        val cycleStart = results.lastIndexOf(current)
+        val cycleSize = results.size - cycleStart
+        return results[cycleStart + (1000000000 - cycleStart) % cycleSize].calculateWeight()
     }
 }

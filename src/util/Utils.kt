@@ -1,5 +1,6 @@
 package util
 
+import java.util.Collections.swap
 import kotlin.io.path.Path
 import kotlin.io.path.readLines
 import kotlin.io.path.readText
@@ -75,3 +76,7 @@ fun <T> accumulate(times: Int, initial: T, operation: (acc: T, index: Int) -> T)
     List(times) { it }.fold(initial) { acc, index ->
         operation(acc, index)
     }
+
+fun MutableList<*>.swap(firstIndex: Int, secondIndex: Int) {
+    swap(this, firstIndex, secondIndex)
+}
