@@ -1,12 +1,9 @@
 package y2023
 
 import Day
+import util.Direction
 
 object Day16 : Day(isTest = false) {
-
-    enum class Direction {
-        LEFT, RIGHT, UP, DOWN
-    }
 
     private data class Beam(
         val x: Int,
@@ -14,16 +11,16 @@ object Day16 : Day(isTest = false) {
         val direction: Direction
     ) {
         val left: Beam
-            get() = Beam(x, y - 1, Direction.LEFT)
+            get() = Beam(x, y - 1, Direction.WEST)
 
         val right: Beam
-            get() = Beam(x, y + 1, Direction.RIGHT)
+            get() = Beam(x, y + 1, Direction.EAST)
 
         val top: Beam
-            get() = Beam(x - 1, y, Direction.UP)
+            get() = Beam(x - 1, y, Direction.NORTH)
 
         val bottom: Beam
-            get() = Beam(x + 1, y, Direction.DOWN)
+            get() = Beam(x + 1, y, Direction.SOUTH)
 
     }
 
@@ -37,75 +34,75 @@ object Day16 : Day(isTest = false) {
         tested.add(beam)
         when (lines[beam.x][beam.y]) {
             '.' -> when (beam.direction) {
-                Direction.LEFT -> visit(beam.left, tested)
-                Direction.RIGHT -> visit(beam.right, tested)
-                Direction.UP -> visit(beam.top, tested)
-                Direction.DOWN -> visit(beam.bottom, tested)
+                Direction.WEST -> visit(beam.left, tested)
+                Direction.EAST -> visit(beam.right, tested)
+                Direction.NORTH -> visit(beam.top, tested)
+                Direction.SOUTH -> visit(beam.bottom, tested)
             }
 
             '|' -> when (beam.direction) {
-                Direction.LEFT -> {
+                Direction.WEST -> {
                     visit(beam.top, tested)
                     visit(beam.bottom, tested)
                 }
 
-                Direction.RIGHT -> {
+                Direction.EAST -> {
                     visit(beam.top, tested)
                     visit(beam.bottom, tested)
                 }
 
-                Direction.UP -> visit(beam.top, tested)
-                Direction.DOWN -> visit(beam.bottom, tested)
+                Direction.NORTH -> visit(beam.top, tested)
+                Direction.SOUTH -> visit(beam.bottom, tested)
             }
 
             '-' -> when (beam.direction) {
-                Direction.LEFT -> visit(beam.left, tested)
-                Direction.RIGHT -> visit(beam.right, tested)
-                Direction.UP -> {
+                Direction.WEST -> visit(beam.left, tested)
+                Direction.EAST -> visit(beam.right, tested)
+                Direction.NORTH -> {
                     visit(beam.left, tested)
                     visit(beam.right, tested)
                 }
 
-                Direction.DOWN -> {
+                Direction.SOUTH -> {
                     visit(beam.left, tested)
                     visit(beam.right, tested)
                 }
             }
 
             '/' -> when (beam.direction) {
-                Direction.LEFT -> visit(beam.bottom, tested)
-                Direction.RIGHT -> visit(beam.top, tested)
-                Direction.UP -> visit(beam.right, tested)
-                Direction.DOWN -> visit(beam.left, tested)
+                Direction.WEST -> visit(beam.bottom, tested)
+                Direction.EAST -> visit(beam.top, tested)
+                Direction.NORTH -> visit(beam.right, tested)
+                Direction.SOUTH -> visit(beam.left, tested)
             }
 
             '\\' -> when (beam.direction) {
-                Direction.LEFT -> visit(beam.top, tested)
-                Direction.RIGHT -> visit(beam.bottom, tested)
-                Direction.UP -> visit(beam.left, tested)
-                Direction.DOWN -> visit(beam.right, tested)
+                Direction.WEST -> visit(beam.top, tested)
+                Direction.EAST -> visit(beam.bottom, tested)
+                Direction.NORTH -> visit(beam.left, tested)
+                Direction.SOUTH -> visit(beam.right, tested)
             }
         }
     }
 
     override fun part1(): Any {
         val tested = mutableSetOf<Beam>()
-        visit(Beam(0, 0, Direction.RIGHT), tested)
+        visit(Beam(0, 0, Direction.EAST), tested)
         return tested.map { it.x to it.y }.toSet().size
     }
 
     override fun part2(): Any {
         val startingTop = lines.first().indices.map {
-            Beam(0, it, Direction.DOWN)
+            Beam(0, it, Direction.SOUTH)
         }
         val startingBottom = lines.first().indices.map {
-            Beam(lines.lastIndex, it, Direction.UP)
+            Beam(lines.lastIndex, it, Direction.NORTH)
         }
         val startingLeft = lines.indices.map {
-            Beam(it, 0, Direction.RIGHT)
+            Beam(it, 0, Direction.EAST)
         }
         val startingRight = lines.indices.map {
-            Beam(it, lines.first().lastIndex, Direction.LEFT)
+            Beam(it, lines.first().lastIndex, Direction.WEST)
         }
         return (startingLeft + startingRight + startingTop + startingBottom).maxOf {
             val tested = mutableSetOf<Beam>()

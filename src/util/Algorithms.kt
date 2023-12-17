@@ -3,18 +3,22 @@ package util
 import java.util.*
 import kotlin.math.abs
 
-data class Node(val x: Long, val y: Long) {
-    constructor(x: Int, y: Int) : this(x.toLong(), y.toLong())
+data class Node(val x: Int, val y: Int) {
+    operator fun plus(other: Node): Node = Node(this.x + other.x, this.y + other.y)
+
+    operator fun times(times: Int): Node = Node(this.x * times, this.y * times)
+
+    fun isInBounds(xLimit: Int, yLimit: Int): Boolean =
+        x in 0..xLimit && y in 0..yLimit
 }
 
-infix fun Long.nodeTo(that: Long): Node = Node(this, that)
 infix fun Int.nodeTo(that: Int): Node = Node(this, that)
 
-data class Edge(val start: Node, val end: Node, val distance: Long = 1)
+data class Edge(val start: Node, val end: Node, val distance: Int = 1)
 
-data class SearchResult(val distance: Long, val path: List<Node>)
+data class SearchResult(val distance: Int, val path: List<Node>)
 
-fun manhattan(first: Node, second: Node): Long =
+fun manhattan(first: Node, second: Node): Int =
     abs(first.x - second.x) + abs(first.y - second.y)
 
 fun bfs(start: Node, goal: Node, edges: Set<Edge>): SearchResult {
@@ -27,7 +31,7 @@ fun bfs(start: Node, goal: Node, edges: Set<Edge>): SearchResult {
         visited.add(current)
         if (current == goal) {
             val path = getPath(current, previous)
-            return SearchResult(path.size - 1L, path)
+            return SearchResult(path.size - 1, path)
         }
         edges.filter {
             it.start == current && it.end !in visited
@@ -41,7 +45,7 @@ fun bfs(start: Node, goal: Node, edges: Set<Edge>): SearchResult {
 
 fun dijkstra(start: Node, goal: Node, edges: Set<Edge>): SearchResult {
     val previous = mutableMapOf<Node, Node>()
-    val distance = mutableMapOf<Node, Long>().withDefault { Long.MAX_VALUE }
+    val distance = mutableMapOf<Node, Int>().withDefault { Int.MAX_VALUE }
     val nodes = edges.flatMap { listOf(it.start, it.end) }.distinct().toMutableList()
     distance[start] = 0
     while (nodes.isNotEmpty()) {
@@ -64,8 +68,8 @@ fun dijkstra(start: Node, goal: Node, edges: Set<Edge>): SearchResult {
 
 fun aStar(start: Node, goal: Node, edges: Set<Edge>): SearchResult {
     val previous = mutableMapOf<Node, Node>()
-    val distance = mutableMapOf<Node, Long>().withDefault { Long.MAX_VALUE }
-    val guess = mutableMapOf<Node, Long>().withDefault { Long.MAX_VALUE }
+    val distance = mutableMapOf<Node, Int>().withDefault { Int.MAX_VALUE }
+    val guess = mutableMapOf<Node, Int>().withDefault { Int.MAX_VALUE }
     val nodes = mutableListOf(start)
     distance[start] = 0
     guess[start] = manhattan(start, goal)

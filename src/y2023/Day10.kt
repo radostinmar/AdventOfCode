@@ -1,6 +1,7 @@
 package y2023
 
 import Day
+import util.Direction
 
 object Day10 : Day() {
 
@@ -39,47 +40,43 @@ object Day10 : Day() {
         }
     }
 
-    private enum class Direction {
-        LEFT, RIGHT, TOP, BOTTOM
-    }
-
     private data class Node(
         val x: Int,
         val y: Int,
         val enteredFrom: Direction? = null
     ) {
-        val hasTopDirection by lazy { Direction.TOP in directions }
+        val hasTopDirection by lazy { Direction.NORTH in directions }
         private val coordinates = x to y
         private val pipe = lines[x][y]
         private val directions: List<Direction> by lazy {
             when (pipe) {
                 'S' -> listOfNotNull(
-                    if (Direction.BOTTOM in top.directions) Direction.TOP else null,
-                    if (Direction.TOP in bottom.directions) Direction.BOTTOM else null,
-                    if (Direction.LEFT in right.directions) Direction.RIGHT else null,
-                    if (Direction.RIGHT in left.directions) Direction.LEFT else null
+                    if (Direction.SOUTH in top.directions) Direction.NORTH else null,
+                    if (Direction.NORTH in bottom.directions) Direction.SOUTH else null,
+                    if (Direction.WEST in right.directions) Direction.EAST else null,
+                    if (Direction.EAST in left.directions) Direction.WEST else null
                 )
 
-                '7' -> listOf(Direction.LEFT, Direction.BOTTOM)
-                'F' -> listOf(Direction.RIGHT, Direction.BOTTOM)
-                'L' -> listOf(Direction.RIGHT, Direction.TOP)
-                'J' -> listOf(Direction.LEFT, Direction.TOP)
-                '|' -> listOf(Direction.TOP, Direction.BOTTOM)
-                '-' -> listOf(Direction.LEFT, Direction.RIGHT)
+                '7' -> listOf(Direction.WEST, Direction.SOUTH)
+                'F' -> listOf(Direction.EAST, Direction.SOUTH)
+                'L' -> listOf(Direction.EAST, Direction.NORTH)
+                'J' -> listOf(Direction.WEST, Direction.NORTH)
+                '|' -> listOf(Direction.NORTH, Direction.SOUTH)
+                '-' -> listOf(Direction.WEST, Direction.EAST)
                 else -> throw IllegalStateException()
             }
         }
-        private val top by lazy { Node(x = x - 1, y = y, enteredFrom = Direction.BOTTOM) }
-        private val bottom by lazy { Node(x = x + 1, y = y, enteredFrom = Direction.TOP) }
-        private val left by lazy { Node(x = x, y = y - 1, enteredFrom = Direction.RIGHT) }
-        private val right by lazy { Node(x = x, y = y + 1, enteredFrom = Direction.LEFT) }
+        private val top by lazy { Node(x = x - 1, y = y, enteredFrom = Direction.SOUTH) }
+        private val bottom by lazy { Node(x = x + 1, y = y, enteredFrom = Direction.NORTH) }
+        private val left by lazy { Node(x = x, y = y - 1, enteredFrom = Direction.EAST) }
+        private val right by lazy { Node(x = x, y = y + 1, enteredFrom = Direction.WEST) }
 
         fun getNext(): Node? =
             when (directions.first { it != enteredFrom }) {
-                Direction.LEFT -> left
-                Direction.RIGHT -> right
-                Direction.TOP -> top
-                Direction.BOTTOM -> bottom
+                Direction.WEST -> left
+                Direction.EAST -> right
+                Direction.NORTH -> top
+                Direction.SOUTH -> bottom
             }.let { if (it.pipe == 'S') null else it }
 
         override fun equals(other: Any?): Boolean =
