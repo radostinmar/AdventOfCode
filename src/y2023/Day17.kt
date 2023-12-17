@@ -45,7 +45,7 @@ object Day17 : Day(isTest = false) {
 
             Direction.entries.forEach { newDirection ->
                 current.direction?.let { direction ->
-                    if (direction.change + newDirection.change == 0 nodeTo 0) {
+                    if (direction.opposite == newDirection) {
                         return@forEach
                     }
                     if (current.steps < minSteps && newDirection != current.direction) {
@@ -57,7 +57,7 @@ object Day17 : Day(isTest = false) {
                 if (newSteps > maxSteps) {
                     return@forEach
                 }
-                val newNode = current.node + newDirection.change
+                val newNode = current.node + newDirection
                 if (!newNode.isInBounds(lines.lastIndex, lines.first().lastIndex)) {
                     return@forEach
                 }

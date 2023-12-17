@@ -6,6 +6,8 @@ import kotlin.math.abs
 data class Node(val x: Int, val y: Int) {
     operator fun plus(other: Node): Node = Node(this.x + other.x, this.y + other.y)
 
+    operator fun plus(direction: Direction): Node = this + direction.change
+
     operator fun times(times: Int): Node = Node(this.x * times, this.y * times)
 
     fun isInBounds(xLimit: Int, yLimit: Int): Boolean =
