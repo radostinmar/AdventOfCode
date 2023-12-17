@@ -6,56 +6,69 @@ import util.Node
 import util.nodeTo
 import java.util.*
 
-object Day17 : Day() {
+object Day17 : Day(isTest = false) {
 
-    private data class State(val node: Node, val direction: Direction, val steps: Int)
+    private interface HashData {
+        val node: Node
+        val direction: Direction?
+        val steps: Int
+    }
 
-    private data class StateWithCost(val state: State, val cost: Int) : Comparable<StateWithCost> {
-        override fun compareTo(other: StateWithCost): Int = this.cost.compareTo(other.cost)
+    private data class HashDataImpl(
+        override val node: Node,
+        override val direction: Direction?,
+        override val steps: Int
+    ) : HashData
+
+    private data class State(
+        val hashData: HashDataImpl,
+        val cost: Int
+    ) : Comparable<State>, HashData by hashData {
+        override fun compareTo(other: State): Int = this.cost.compareTo(other.cost)
     }
 
     private fun solve(minSteps: Int, maxSteps: Int): Int {
         val start = 0 nodeTo 0
         val end = lines.lastIndex nodeTo lines.first().lastIndex
-        val queue = PriorityQueue<StateWithCost>()
-        val visited = hashSetOf<State>()
-        queue.add(StateWithCost(State(start, Direction.EAST, 1), 0))
-        queue.add(StateWithCost(State(start, Direction.SOUTH, 1), 0))
+        val queue = PriorityQueue<State>()
+        val visited = hashSetOf<HashDataImpl>()
+        queue.add(State(HashDataImpl(node = start, direction = null, steps = 0), cost = 0))
         while (queue.isNotEmpty()) {
             val current = queue.poll()
-            if (current.state in visited) {
+            if (current.hashData in visited) {
                 continue
             }
-            visited.add(current.state)
-            val newNode = current.state.node + current.state.direction.change
-            if (!newNode.isInBounds(lines.lastIndex, lines.first().lastIndex)) {
-                continue
-            }
-            val newCost = current.cost + lines[newNode.x][newNode.y].digitToInt()
-            if (current.state.steps >= minSteps && newNode == end) {
-                return newCost
+            visited.add(current.hashData)
+            if (current.steps >= minSteps && current.node == end) {
+                return current.cost
             }
 
             Direction.entries.forEach { newDirection ->
-                if (current.state.direction.change + newDirection.change == 0 nodeTo 0) {
-                    return@forEach
+                current.direction?.let { direction ->
+                    if (direction.change + newDirection.change == 0 nodeTo 0) {
+                        return@forEach
+                    }
+                    if (current.steps < minSteps && newDirection != current.direction) {
+                        return@forEach
+                    }
                 }
-                if (current.state.steps < minSteps && newDirection != current.state.direction) {
-                    return@forEach
-                }
-                val newSteps = if (newDirection == current.state.direction) current.state.steps + 1 else 1
+
+                val newSteps = if (newDirection == current.direction) current.steps + 1 else 1
                 if (newSteps > maxSteps) {
                     return@forEach
                 }
-                queue.add(StateWithCost(State(newNode, newDirection, newSteps), newCost))
+                val newNode = current.node + newDirection.change
+                if (!newNode.isInBounds(lines.lastIndex, lines.first().lastIndex)) {
+                    return@forEach
+                }
+                val newCost = current.cost + lines[newNode.x][newNode.y].digitToInt()
+                queue.add(State(HashDataImpl(newNode, newDirection, newSteps), newCost))
             }
         }
         return -1
     }
 
-    override fun part1(): Any =
-        solve(minSteps = 1, maxSteps = 3)
+    override fun part1(): Any = solve(minSteps = 1, maxSteps = 3)
 
-    override fun part2(): Any =
-        solve(minSteps = 4, maxSteps = 10)
+    override fun part2(): Any = solve(minSteps = 4, maxSteps = 10)
 }
