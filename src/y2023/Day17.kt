@@ -2,20 +2,20 @@ package y2023
 
 import Day
 import util.Direction
-import util.Node
-import util.nodeTo
+import util.Point
+import util.pTo
 import java.util.*
 
 object Day17 : Day(isTest = false) {
 
     private interface HashData {
-        val node: Node
+        val point: Point
         val direction: Direction?
         val steps: Int
     }
 
     private data class HashDataImpl(
-        override val node: Node,
+        override val point: Point,
         override val direction: Direction?,
         override val steps: Int
     ) : HashData
@@ -28,18 +28,18 @@ object Day17 : Day(isTest = false) {
     }
 
     private fun solve(minSteps: Int, maxSteps: Int): Int {
-        val start = 0 nodeTo 0
-        val end = lines.lastIndex nodeTo lines.first().lastIndex
+        val start = 0 pTo 0
+        val end = lines.lastIndex pTo lines.first().lastIndex
         val queue = PriorityQueue<State>()
         val visited = hashSetOf<HashDataImpl>()
-        queue.add(State(HashDataImpl(node = start, direction = null, steps = 0), cost = 0))
+        queue.add(State(HashDataImpl(point = start, direction = null, steps = 0), cost = 0))
         while (queue.isNotEmpty()) {
             val current = queue.poll()
             if (current.hashData in visited) {
                 continue
             }
             visited.add(current.hashData)
-            if (current.steps >= minSteps && current.node == end) {
+            if (current.steps >= minSteps && current.point == end) {
                 return current.cost
             }
 
@@ -57,7 +57,7 @@ object Day17 : Day(isTest = false) {
                 if (newSteps > maxSteps) {
                     return@forEach
                 }
-                val newNode = current.node + newDirection
+                val newNode = current.point + newDirection
                 if (!newNode.isInBounds(lines.lastIndex, lines.first().lastIndex)) {
                     return@forEach
                 }

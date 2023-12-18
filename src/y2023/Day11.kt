@@ -1,15 +1,15 @@
 package y2023
 
 import Day
-import util.Node
+import util.Point
 import util.manhattan
-import util.nodeTo
+import util.pTo
 
 object Day11 : Day() {
 
     private fun distance(
-        first: Node,
-        second: Node,
+        first: Point,
+        second: Point,
         emptyRows: List<Int>,
         emptyCols: List<Int>,
         expansion: Long
@@ -32,7 +32,7 @@ object Day11 : Day() {
 
         val galaxies = lines.flatMapIndexed { row, chars ->
             chars.mapIndexedNotNull { col, c ->
-                if (c == '#') row nodeTo col else null
+                if (c == '#') row pTo col else null
             }
         }
         return galaxies.withIndex().sumOf { galaxy ->

@@ -3,30 +3,17 @@ package util
 import java.util.*
 import kotlin.math.abs
 
-data class Node(val x: Int, val y: Int) {
-    operator fun plus(other: Node): Node = Node(this.x + other.x, this.y + other.y)
+data class Edge(val start: Point, val end: Point, val distance: Int = 1)
 
-    operator fun plus(direction: Direction): Node = this + direction.change
+data class SearchResult(val distance: Int, val path: List<Point>)
 
-    operator fun times(times: Int): Node = Node(this.x * times, this.y * times)
-
-    fun isInBounds(xLimit: Int, yLimit: Int): Boolean =
-        x in 0..xLimit && y in 0..yLimit
-}
-
-infix fun Int.nodeTo(that: Int): Node = Node(this, that)
-
-data class Edge(val start: Node, val end: Node, val distance: Int = 1)
-
-data class SearchResult(val distance: Int, val path: List<Node>)
-
-fun manhattan(first: Node, second: Node): Int =
+fun manhattan(first: Point, second: Point): Int =
     abs(first.x - second.x) + abs(first.y - second.y)
 
-fun bfs(start: Node, goal: Node, edges: Set<Edge>): SearchResult {
-    val visited = mutableSetOf<Node>()
-    val previous = mutableMapOf<Node, Node>()
-    val queue: Queue<Node> = LinkedList()
+fun bfs(start: Point, goal: Point, edges: Set<Edge>): SearchResult {
+    val visited = mutableSetOf<Point>()
+    val previous = mutableMapOf<Point, Point>()
+    val queue: Queue<Point> = LinkedList()
     queue.add(start)
     while (queue.isNotEmpty()) {
         val current = queue.remove()
@@ -45,9 +32,9 @@ fun bfs(start: Node, goal: Node, edges: Set<Edge>): SearchResult {
     return SearchResult(-1, emptyList())
 }
 
-fun dijkstra(start: Node, goal: Node, edges: Set<Edge>): SearchResult {
-    val previous = mutableMapOf<Node, Node>()
-    val distance = mutableMapOf<Node, Int>().withDefault { Int.MAX_VALUE }
+fun dijkstra(start: Point, goal: Point, edges: Set<Edge>): SearchResult {
+    val previous = mutableMapOf<Point, Point>()
+    val distance = mutableMapOf<Point, Int>().withDefault { Int.MAX_VALUE }
     val nodes = edges.flatMap { listOf(it.start, it.end) }.distinct().toMutableList()
     distance[start] = 0
     while (nodes.isNotEmpty()) {
@@ -68,10 +55,10 @@ fun dijkstra(start: Node, goal: Node, edges: Set<Edge>): SearchResult {
     return SearchResult(-1, emptyList())
 }
 
-fun aStar(start: Node, goal: Node, edges: Set<Edge>): SearchResult {
-    val previous = mutableMapOf<Node, Node>()
-    val distance = mutableMapOf<Node, Int>().withDefault { Int.MAX_VALUE }
-    val guess = mutableMapOf<Node, Int>().withDefault { Int.MAX_VALUE }
+fun aStar(start: Point, goal: Point, edges: Set<Edge>): SearchResult {
+    val previous = mutableMapOf<Point, Point>()
+    val distance = mutableMapOf<Point, Int>().withDefault { Int.MAX_VALUE }
+    val guess = mutableMapOf<Point, Int>().withDefault { Int.MAX_VALUE }
     val nodes = mutableListOf(start)
     distance[start] = 0
     guess[start] = manhattan(start, goal)
@@ -96,6 +83,6 @@ fun aStar(start: Node, goal: Node, edges: Set<Edge>): SearchResult {
     return SearchResult(-1, emptyList())
 }
 
-private fun getPath(node: Node, previous: Map<Node, Node>): List<Node> =
-    generateSequence(node) { previous[it] }.toList()
+private fun getPath(point: Point, previous: Map<Point, Point>): List<Point> =
+    generateSequence(point) { previous[it] }.toList()
 

@@ -1,7 +1,7 @@
 package util
 
-enum class Direction(val change: Node) {
-    NORTH(-1 nodeTo 0), EAST(0 nodeTo 1), SOUTH(1 nodeTo 0), WEST(0 nodeTo -1);
+enum class Direction(val change: Point) {
+    NORTH(-1 pTo 0), EAST(0 pTo 1), SOUTH(1 pTo 0), WEST(0 pTo -1);
 
     val opposite: Direction by lazy {
         when (this) {
