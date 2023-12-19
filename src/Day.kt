@@ -8,7 +8,7 @@ abstract class Day(
     year: Int = Year.now().value
 ) {
 
-    private val file: String = if (isTest) "y$year/test" else "y$year/${this::class.simpleName.orEmpty()}"
+    private val file: String = if (isTest) "test" else "y$year/${this::class.simpleName.orEmpty()}"
 
     protected val lines: List<String> by lazy { readLines(file) }
 
