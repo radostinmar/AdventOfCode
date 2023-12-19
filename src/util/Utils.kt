@@ -21,6 +21,11 @@ val Iterable<Int>.product: Int
         acc * cur
     }
 
+val Iterable<Long>.product: Long
+    get() = this.reduce { acc, cur ->
+        acc * cur
+    }
+
 fun <T> List<T>.productOf(selector: (T) -> Int): Int =
     this.map { selector(it) }.product
 
