@@ -13,4 +13,8 @@ data class Point(val x: Int, val y: Int) {
         x in 0..xLimit && y in 0..yLimit
 }
 
+operator fun List<String>.get(point: Point): Char = this[point.x][point.y]
+
+operator fun <T> List<List<T>>.get(point: Point): T = this[point.x][point.y]
+
 infix fun Int.pTo(that: Int): Point = Point(this, that)
