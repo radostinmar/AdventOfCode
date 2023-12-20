@@ -2,8 +2,26 @@ package y2022
 
 import Day
 import util.*
+import java.util.*
 
 object Day12 : Day(year = 2022) {
+
+    private fun findAllDistances(start: Point): Map<Point, Int> {
+        val distances = mutableMapOf<Point, Int>()
+        val visited = mutableSetOf<Point>()
+        val queue: Queue<PointWithCost> = LinkedList()
+        queue.add(PointWithCost(start, 0))
+        while (queue.isNotEmpty()) {
+            val current = queue.poll()
+            if (current.point in visited) continue
+            visited.add(current.point)
+            distances[current.point] = current.cost
+            reverseEdges.filter { it.start == current.point && it.end !in visited }.forEach { edge ->
+                queue.add(PointWithCost(edge.end, current.cost + 1))
+            }
+        }
+        return distances
+    }
 
     private val Char.height: Int
         get() = when (this) {
@@ -26,6 +44,20 @@ object Day12 : Day(year = 2022) {
         }
     }.toSet()
 
+    private val reverseEdges = lines.flatMapIndexed { row, line ->
+        line.flatMapIndexed { col, c ->
+            val current = row pTo col
+            Direction.entries.mapNotNull {
+                val point = current + it
+                if (point.isInBounds(lines.lastIndex, lines.first().lastIndex) && c.height <= lines[point].height + 1) {
+                    Edge(current, point)
+                } else {
+                    null
+                }
+            }
+        }
+    }.toSet()
+
     override fun part1(): Any {
         val start = lines.withIndex().firstNotNullOf { (row, line) ->
             line.indexOf('S').takeUnless { it == -1 }?.let {
@@ -34,25 +66,20 @@ object Day12 : Day(year = 2022) {
         }
         val end = lines.withIndex().firstNotNullOf { (row, line) ->
             line.indexOf('E').takeUnless { it == -1 }?.let {
-                row pTo  it
+                row pTo it
             }
         }
-        return aStar(start, end, edges).distance
+        return bfs(start, end, edges).distance
     }
 
     override fun part2(): Any {
-        val starts = lines.flatMapIndexed { row, line ->
-            line.mapIndexedNotNull { col, c ->
-                if(c =='a' || c == 'S') row pTo col else null
-            }
-        }
-        val end = lines.withIndex().firstNotNullOf { (row, line) ->
+        val start = lines.withIndex().firstNotNullOf { (row, line) ->
             line.indexOf('E').takeUnless { it == -1 }?.let {
-                row pTo  it
+                row pTo it
             }
         }
-        return starts.map { start -> aStar(start, end, edges).distance }
-            .filter { it != -1 }
-            .min()
+        return findAllDistances(start).entries.filter {
+            lines[it.key] == 'a' || lines[it.key] == 'S'
+        }.minOf { it.value }
     }
 }
