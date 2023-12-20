@@ -3,6 +3,7 @@ package y2023
 import Day
 import util.Direction
 import util.Point
+import util.get
 import util.pTo
 import java.util.*
 
@@ -61,7 +62,7 @@ object Day17 : Day(isTest = false) {
                 if (!newNode.isInBounds(lines.lastIndex, lines.first().lastIndex)) {
                     return@forEach
                 }
-                val newCost = current.cost + lines[newNode.x][newNode.y].digitToInt()
+                val newCost = current.cost + lines[newNode].digitToInt()
                 queue.add(State(HashDataImpl(newNode, newDirection, newSteps), newCost))
             }
         }

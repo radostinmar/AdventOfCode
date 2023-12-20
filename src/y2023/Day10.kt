@@ -3,6 +3,7 @@ package y2023
 import Day
 import util.Direction
 import util.Point
+import util.get
 import util.pTo
 
 object Day10 : Day() {
@@ -12,7 +13,7 @@ object Day10 : Day() {
         val enteredFrom: Direction? = null
     ) {
         val hasTopDirection by lazy { Direction.NORTH in directions }
-        private val pipe = lines[point.x][point.y]
+        private val pipe = lines[point]
         private val directions: List<Direction> by lazy {
             when (pipe) {
                 'S' -> listOfNotNull(
