@@ -1,3 +1,5 @@
+import util.println
+
 fun main() {
-    y2022.Day12()
+    y2023.Day21()
 }
