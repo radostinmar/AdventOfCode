@@ -6,7 +6,7 @@ import util.Point
 import util.get
 import util.pTo
 
-object Day21 : Day(isTest = false) {
+object Day21 : Day() {
 
     private fun getNeighbours(point: Point): List<Pair<Point, Point>> =
         Direction.entries.mapNotNull {
@@ -28,34 +28,48 @@ object Day21 : Day(isTest = false) {
         }
     }.toMap().toMutableMap()
 
-    private fun findPossibleCount(steps: Int) : Int {
+    private fun findPossibleCount(steps: Int, saveAt: List<Int> = listOf(steps)): List<Int> {
+        val saved = mutableListOf<Int>()
         val start = lines.withIndex().firstNotNullOf { (row, line) ->
             line.indexOf('S').takeUnless { it == -1 }?.let {
                 row pTo it
             }
         }
         var currentPoints = setOf(start to (0 pTo 0))
-        repeat(steps) {
+        repeat(steps) { step ->
             currentPoints = currentPoints.flatMap { pair ->
                 neighbours.getValue(pair.first)
                     .map {
                         it.first to (it.second + pair.second)
                     }
             }.toSet()
+            if (step + 1 in saveAt) {
+                saved.add(currentPoints.size)
+            }
         }
-        return currentPoints.size
+        return saved
     }
 
 
-    override fun part1(): Any = findPossibleCount(steps = 64)
+    override fun part1(): Any = findPossibleCount(steps = 64).first()
 
+    @Suppress("UnnecessaryVariable")
     override fun part2(): Any {
-        // 26501365 = 202300 * 131 + 65
-        val a0 = findPossibleCount(65)
-        val a1 = findPossibleCount(65 + 131)
-        val a2 = findPossibleCount(65 + 2 * 131)
-//        [3710, 32976, 91404]
-        return 596734624269210
+        val steps = 26501365
+        val height = lines.size
+        val remainder = steps % height
+
+        val x0 = remainder
+        val x1 = remainder + height
+        val x2 = remainder + 2 * height
+
+        val (y0, y1, y2) = findPossibleCount(x2, listOf(x0, x1, x2))
+        val a = (y2 - 2 * y1 + y0) / 2L
+        val b = y1 - y0 - a
+        val c = y0
+        val n = steps.toLong() / height
+
+        return a * n * n + b * n + c
     }
 
 }
