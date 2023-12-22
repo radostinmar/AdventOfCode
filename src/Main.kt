@@ -1,5 +1,3 @@
-import util.println
-
 fun main() {
-    y2023.Day21()
+    y2023.Day22()
 }
