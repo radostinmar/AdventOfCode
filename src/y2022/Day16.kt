@@ -2,7 +2,7 @@ package y2022
 
 import Day
 
-object Day16 : Day(year = 2022, isTest = true) {
+object Day16 : Day(year = 2022, isTest = false) {
 
     private data class State(
         val current: Valve,
@@ -25,6 +25,9 @@ object Day16 : Day(year = 2022, isTest = true) {
         }
         cache[state]?.let { return it }
         return shortestPaths.getValue(state.current).maxOf {
+            if(it.key in state.open) {
+                Int.MIN_VALUE
+            }
             val timeToReachAndOpen = it.value + 1
             state.open.sumOf(Valve::flowRate) * timeToReachAndOpen + findBest(
                 state = state.copy(
