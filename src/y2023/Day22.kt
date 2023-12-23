@@ -80,8 +80,8 @@ object Day22 : Day(isTest = false) {
                 placed.add(it.first)
             }
         }
-        return placed.withIndex().sumOf {
-            disintegrate(listOf(it.value), emptyList(), below)
+        return placed.sumOf {
+            disintegrate(listOf(it), emptyList(), below)
         }
     }
 }
