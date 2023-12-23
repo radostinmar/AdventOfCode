@@ -16,7 +16,7 @@ object Day23 : Day(isTest = false) {
         val start = 0 pTo lines.first().indexOfFirst { it == '.' }
         val end = lines.lastIndex pTo lines.last().indexOfFirst { it == '.' }
         val intersections = (findIntersections(withSlopes) + start + end).toSet()
-        val graph = intersections.associateWith { findClosest(it, intersections, withSlopes) }
+        val graph = intersections.associateWith { findClosestIntersections(it, intersections, withSlopes) }
         return findMax(start, end, emptySet(), graph)
     }
 
@@ -53,10 +53,14 @@ object Day23 : Day(isTest = false) {
         }
     }
 
-    private fun findClosest(start: Point, intersections: Set<Point>, withSlopes: Boolean): Map<Point, Int> {
+    private fun findClosestIntersections(
+        start: Point,
+        intersections: Set<Point>,
+        withSlopes: Boolean
+    ): Map<Point, Int> {
         val neighbours = getNeighbours(start, withSlopes)
         return neighbours.mapNotNull {
-            findNextIntersection(it, setOf(start), intersections, 1, withSlopes)
+            findNextIntersection(it, setOf(start), intersections, withSlopes, distance = 1)
         }.toMap()
     }
 
@@ -64,15 +68,13 @@ object Day23 : Day(isTest = false) {
         start: Point,
         visited: Set<Point>,
         intersections: Set<Point>,
-        distance: Int,
-        withSlopes: Boolean
-    ): Pair<Point, Int>? {
-        val next = getNeighbours(start, withSlopes).find { it !in visited }
-        next ?: return null
-        return if (next in intersections) {
+        withSlopes: Boolean,
+        distance: Int
+    ): Pair<Point, Int>? = getNeighbours(start, withSlopes).find { it !in visited }?.let { next ->
+        if (next in intersections) {
             next to (distance + 1)
         } else {
-            findNextIntersection(next, visited + start, intersections, distance + 1, withSlopes)
+            findNextIntersection(next, visited + start, intersections, withSlopes, distance + 1)
         }
     }
 
