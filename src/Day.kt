@@ -4,7 +4,7 @@ import java.time.Year
 import kotlin.system.measureTimeMillis
 
 abstract class Day(
-    isTest: Boolean = false,
+    protected val isTest: Boolean = false,
     year: Int = Year.now().value
 ) {
 
