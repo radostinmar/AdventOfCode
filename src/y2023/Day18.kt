@@ -6,7 +6,7 @@ import util.Point
 import util.pTo
 import kotlin.math.absoluteValue
 
-object Day18 : Day(isTest = false) {
+object Day18 : Day(year = 2023) {
 
     private fun calculateArea(points: List<Pair<Point, Int>>): Long =
         points

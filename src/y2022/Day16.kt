@@ -11,34 +11,70 @@ object Day16 : Day(year = 2022, isTest = false) {
     )
 
     private val cache = mutableMapOf<State, Int>()
+    private val cacheElephant = mutableMapOf<Pair<State, Set<String>>, Int>()
 
     private fun findBest(
         state: State,
         shortestPaths: Map<Valve, Map<Valve, Int>>,
-        limit: Int
+        limit: Int,
+        currentSum: Int,
+        isElephant: Boolean
     ): Int {
+        val elephantKey = if (!isElephant) {
+            cache[state]?.let { return it }
+        } else {
+            val key = shortestPaths.keys.map(Valve::name).toSet()
+            cacheElephant[state to key]?.let {
+                return it
+            }
+            key
+        }
         if (state.minutes == limit) {
-            return 0
+            val subset = shortestPaths
+                .filterKeys { key -> key !in state.open }
+                .mapValues { it.value.filterKeys { key -> key !in state.open } }
+            if (subset.size == 1) {
+                return 0
+            }
+            val start = subset.keys.first { it.name == "AA" }
+            return findBest(State(start, emptySet(), 0), subset, limit, currentSum, isElephant = true)
         }
         if (state.minutes > limit) {
             return Int.MIN_VALUE
         }
-        cache[state]?.let { return it }
-        return shortestPaths.getValue(state.current).maxOf {
-            if(it.key in state.open) {
-                Int.MIN_VALUE
-            }
+        val switch = shortestPaths.getValue(state.current).filter {
+            it.key !in state.open
+        }.map {
             val timeToReachAndOpen = it.value + 1
-            state.open.sumOf(Valve::flowRate) * timeToReachAndOpen + findBest(
+            val result = state.open.sumOf(Valve::flowRate) * timeToReachAndOpen + findBest(
                 state = state.copy(
                     current = it.key,
                     open = state.open + it.key,
                     minutes = state.minutes + timeToReachAndOpen
                 ),
                 shortestPaths = shortestPaths,
-                limit = limit
+                limit = limit,
+                currentSum = currentSum + state.open.sumOf(Valve::flowRate) * timeToReachAndOpen,
+                isElephant
             )
-        }.also { cache[state] = it }
+            result
+        }
+        return if (isElephant) {
+            switch.ifEmpty {
+                val minutesLeft = limit - state.minutes
+                return (state.open.sumOf(Valve::flowRate) * minutesLeft).also { cacheElephant[state to elephantKey!!] = it }
+            }.max().also { cacheElephant[state to elephantKey!!] = it }
+        } else {
+            val minutesLeft = limit - state.minutes
+            val stay = state.open.sumOf(Valve::flowRate) * minutesLeft + findBest(
+                state.copy(minutes = limit),
+                shortestPaths,
+                limit,
+                currentSum + state.open.sumOf(Valve::flowRate) * minutesLeft,
+                false
+            )
+            (switch + stay).max().also { cache[state] = it }
+        }
     }
 
     private fun floydWarshall(valves: List<Valve>): Map<Valve, Map<String, Int>> {
@@ -83,12 +119,14 @@ object Day16 : Day(year = 2022, isTest = false) {
         }
         val valvesMap = valves.associateBy { it.name }
         val valvesWithPositiveFlowRate = valves.filter { it.flowRate > 0 }.toSet()
-        val shortestPaths = floydWarshall(valves).mapValues {
-            it.value
-                .mapKeys { entry -> valvesMap.getValue(entry.key) }
-                .filterKeys { key -> key in valvesWithPositiveFlowRate }
-                .filterValues { value -> value != 0 }
-        }
-        return findBest(State(valvesMap.getValue("AA"), emptySet(), 0), shortestPaths, 30)
+        val shortestPaths = floydWarshall(valves)
+            .filterKeys { key -> key in valvesWithPositiveFlowRate || key.name == "AA" }
+            .mapValues {
+                it.value
+                    .mapKeys { entry -> valvesMap.getValue(entry.key) }
+                    .filterKeys { key -> key in valvesWithPositiveFlowRate }
+                    .filterValues { value -> value != 0 }
+            }
+        return findBest(State(valvesMap.getValue("AA"), emptySet(), 0), shortestPaths, 26, 0, isElephant = false)
     }
 }

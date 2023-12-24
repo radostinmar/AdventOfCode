@@ -3,7 +3,7 @@ package y2023
 import Day
 import util.toInts
 
-object Day09 : Day() {
+object Day09 : Day(year = 2023) {
     private fun generateNext(numbers: List<Int>): List<Int>? =
         if (numbers.all { it == 0 }) {
             null

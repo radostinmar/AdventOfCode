@@ -6,7 +6,7 @@ import util.Point
 import util.get
 import util.pTo
 
-object Day23 : Day(isTest = false) {
+object Day23 : Day(year = 2023) {
 
     override fun part1(): Any = solve(withSlopes = true)
 

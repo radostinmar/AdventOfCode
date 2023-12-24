@@ -6,7 +6,7 @@ import util.quadratic
 import kotlin.math.ceil
 import kotlin.math.floor
 
-object Day06 : Day() {
+object Day06 : Day(year = 2023) {
 
     private fun findPossible(time: Long, distance: Long): Long {
         val (x1, x2) = quadratic(1.0, -time.toDouble(), distance.toDouble())

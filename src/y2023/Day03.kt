@@ -3,7 +3,7 @@ package y2023
 import Day
 import util.product
 
-object Day03 : Day() {
+object Day03 : Day(year = 2023) {
 
     private fun areAdjacent(sRow: Int, sCol: Int, numRow: Int, numCols: IntRange): Boolean =
         (sRow == numRow && (sCol == numCols.first - 1 || sCol == numCols.last + 1))

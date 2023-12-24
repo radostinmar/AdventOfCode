@@ -3,7 +3,7 @@ package y2023
 import Day
 import util.toInts
 
-object Day12 : Day(isTest = false) {
+object Day12 : Day(year = 2023) {
 
     private val cache = mutableMapOf<Pair<String, List<Int>>, Long>()
 

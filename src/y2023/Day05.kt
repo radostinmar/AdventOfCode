@@ -4,7 +4,7 @@ import Day
 import util.split
 import util.toLongs
 
-object Day05 : Day() {
+object Day05 : Day(year = 2023) {
     private data class Mapping(val src: Long, val dst: Long, val size: Long) {
         fun mapValue(value: Long): Long? = if (value in src..(src + size)) {
             value + dst - src

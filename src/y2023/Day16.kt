@@ -3,7 +3,7 @@ package y2023
 import Day
 import util.Direction
 
-object Day16 : Day(isTest = false) {
+object Day16 : Day(year = 2023) {
 
     private data class Beam(
         val x: Int,

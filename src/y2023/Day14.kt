@@ -4,7 +4,7 @@ import Day
 import util.swap
 import util.transposedToChars
 
-object Day14 : Day() {
+object Day14 : Day(year = 2023) {
 
     private fun List<List<Char>>.roll(): List<List<Char>> =
         this.map { line ->

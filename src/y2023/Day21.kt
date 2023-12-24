@@ -6,7 +6,7 @@ import util.Point
 import util.get
 import util.pTo
 
-object Day21 : Day() {
+object Day21 : Day(year = 2023) {
 
     private fun getNeighbours(point: Point): List<Pair<Point, Point>> =
         Direction.entries.mapNotNull {

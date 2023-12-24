@@ -4,7 +4,7 @@ import Day
 import util.Point3D
 import util.toInts
 
-object Day22 : Day(isTest = false) {
+object Day22 : Day(year = 2023) {
 
     private fun getInitialBricks(): List<Brick> =
         lines.map { line ->

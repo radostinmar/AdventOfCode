@@ -3,7 +3,7 @@ package y2023
 import Day
 import util.product
 
-object Day19 : Day(isTest = false) {
+object Day19 : Day(year = 2023) {
 
     private data class Part(val ratings: Map<String, Int>)
 

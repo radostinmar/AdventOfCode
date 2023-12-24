@@ -2,7 +2,7 @@ package y2023
 
 import Day
 
-object Day15 : Day() {
+object Day15 : Day(year = 2023) {
 
     private fun hash(string: String): Int =
         string.fold(0) { acc, cur ->

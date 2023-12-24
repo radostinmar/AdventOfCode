@@ -6,7 +6,7 @@ import util.Point
 import util.get
 import util.pTo
 
-object Day10 : Day() {
+object Day10 : Day(year = 2023) {
 
     private data class PipeNode(
         val point: Point,

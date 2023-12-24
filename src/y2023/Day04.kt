@@ -3,7 +3,7 @@ package y2023
 import Day
 import kotlin.math.pow
 
-object Day04 : Day() {
+object Day04 : Day(year = 2023) {
     private data class Card(
         val winning: Set<Int>,
         val numbers: List<Int>,

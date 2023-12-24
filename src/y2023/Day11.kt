@@ -5,7 +5,7 @@ import util.Point
 import util.manhattan
 import util.pTo
 
-object Day11 : Day() {
+object Day11 : Day(year = 2023) {
 
     private fun distance(
         first: Point,

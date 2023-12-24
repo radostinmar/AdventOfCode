@@ -4,7 +4,7 @@ import Day
 import util.lcm
 import java.util.*
 
-object Day20 : Day(isTest = false) {
+object Day20 : Day(year = 2023) {
 
     private val signalQueue: Queue<Signal> = LinkedList()
 

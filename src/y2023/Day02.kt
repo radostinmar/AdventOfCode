@@ -2,7 +2,7 @@ package y2023
 
 import Day
 
-object Day02 : Day() {
+object Day02 : Day(year = 2023) {
 
     override fun part1(): Int = lines.sumOf { game ->
         val valid = game.substringAfter(": ").split("; ").none { subset ->

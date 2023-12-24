@@ -4,7 +4,7 @@ import Day
 import util.transposed
 import kotlin.math.min
 
-object Day13 : Day(isTest = false) {
+object Day13 : Day(year = 2023) {
 
     private fun List<String>.findMirror(
         matchCondition: (List<String>, List<String>) -> Boolean

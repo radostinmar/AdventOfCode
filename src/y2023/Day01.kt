@@ -2,7 +2,7 @@ package y2023
 
 import Day
 
-object Day01 : Day() {
+object Day01 : Day(year = 2023) {
     private val wordsToDigits = mapOf(
         "one" to "1",
         "two" to "2",

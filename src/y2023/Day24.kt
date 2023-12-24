@@ -10,7 +10,7 @@ import util.real
 import util.times
 import java.math.BigDecimal
 
-object Day24 : Day(isTest = false) {
+object Day24 : Day(year = 2023) {
 
     private data class PointBigDecimal(val x: BigDecimal, val y: BigDecimal) {
         operator fun plus(other: PointBigDecimal): PointBigDecimal = PointBigDecimal(this.x + other.x, this.y + other.y)

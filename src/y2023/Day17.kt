@@ -7,7 +7,7 @@ import util.get
 import util.pTo
 import java.util.*
 
-object Day17 : Day(isTest = false) {
+object Day17 : Day(year = 2023) {
 
     private interface HashData {
         val point: Point

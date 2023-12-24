@@ -2,7 +2,7 @@ package y2023
 
 import Day
 
-object Day07 : Day() {
+object Day07 : Day(year = 2023) {
     private val normalSuitMap = mapOf(
         'A' to 12,
         'K' to 11,
