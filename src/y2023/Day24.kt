@@ -1,6 +1,13 @@
 package y2023
 
 import Day
+import com.microsoft.z3.Context
+import com.microsoft.z3.Status
+import util.eq
+import util.get
+import util.plus
+import util.real
+import util.times
 import java.math.BigDecimal
 
 object Day24 : Day(isTest = false) {
@@ -44,19 +51,22 @@ object Day24 : Day(isTest = false) {
         val velocity: Point3DBigDecimal
     )
 
-    override fun part1(): Any {
-        val intersectionRange = if (isTest) {
-            BigDecimal(7)..BigDecimal(27)
-        } else {
-            BigDecimal(200000000000000)..BigDecimal(400000000000000)
-        }
-        val hailStones = lines.map { line ->
+    private fun parse(): List<HailStone> =
+        lines.map { line ->
             val values = line.split("\\s*([@,])\\s*".toRegex()).map { it.toBigDecimal() }
             HailStone(
                 Point3DBigDecimal(values[0], values[1], values[2]),
                 Point3DBigDecimal(values[3], values[4], values[5])
             )
         }
+
+    override fun part1(): Any {
+        val intersectionRange = if (isTest) {
+            BigDecimal(7)..BigDecimal(27)
+        } else {
+            BigDecimal(200000000000000)..BigDecimal(400000000000000)
+        }
+        val hailStones = parse()
         return hailStones.withIndex().sumOf { (index, hailStoneA) ->
             hailStones.subList(index + 1, hailStones.size).count { hailStoneB ->
                 val secondPositionA = hailStoneA.position + hailStoneA.velocity
@@ -76,6 +86,31 @@ object Day24 : Day(isTest = false) {
         }
     }
 
-    override fun part2(): Any =
-        "Solved using SageMath. Generate 9 equations from the first 3 lines. Check day24part2.sage. Paste contents into https://sagecell.sagemath.org/"
+    override fun part2(): Any = with(Context()) {
+        val hailStones = parse()
+
+        val solver = mkSolver()
+
+        val x = mkRealConst("x")
+        val y = mkRealConst("y")
+        val z = mkRealConst("z")
+        val vx = mkRealConst("vx")
+        val vy = mkRealConst("vy")
+        val vz = mkRealConst("vz")
+
+        hailStones.take(3).forEachIndexed { i, hailStone ->
+            val t = mkRealConst("t$i")
+
+            solver.add(x + vx * t eq hailStone.position.x.real + hailStone.velocity.x.real * t)
+            solver.add(y + vy * t eq hailStone.position.y.real + hailStone.velocity.y.real * t)
+            solver.add(z + vz * t eq hailStone.position.z.real + hailStone.velocity.z.real * t)
+        }
+        val ans = mkRealConst("ans")
+        solver.add(ans eq x + y + z)
+
+        return when (val status = solver.check()) {
+            Status.SATISFIABLE -> solver.model[ans]
+            else -> status
+        }
+    }
 }
