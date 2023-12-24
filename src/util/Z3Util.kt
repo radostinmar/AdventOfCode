@@ -28,5 +28,5 @@ val BigDecimal.real: RatNum
     get() = mkReal(this.toPlainString())
 
 operator fun Model.get(x: Expr<RealSort>): BigDecimal = (getConstInterp(x) as RatNum).let {
-    it.bigIntNumerator.toBigDecimal().divide(it.bigIntDenominator.toBigDecimal())
+    it.bigIntNumerator.toBigDecimal() / it.bigIntDenominator.toBigDecimal()
 }
