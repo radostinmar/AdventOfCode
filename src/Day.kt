@@ -1,7 +1,7 @@
 import util.readLines
 import util.readText
 import java.time.Year
-import kotlin.system.measureTimeMillis
+import kotlin.system.measureNanoTime
 
 abstract class Day(
     protected val isTest: Boolean = false,
@@ -21,13 +21,13 @@ abstract class Day(
     operator fun invoke() {
         println("● ${this::class.simpleName.orEmpty()}")
         println("   ○ Part 1")
-        measureTimeMillis {
+        measureNanoTime {
             println("       Solution ${part1()}")
-        }.let { println("       Time $it") }
+        }.let { println("       Time ${it}ns | ${it / 1000f}μs | ${it / 1000000f}ms | ${it / 1000000000f}s") }
 
         println("   ○ Part 2")
-        measureTimeMillis {
+        measureNanoTime {
             println("       Solution ${part2()}")
-        }.let { println("       Time $it") }
+        }.let { println("       Time ${it}ns | ${it / 1000f}μs | ${it / 1000000f}ms | ${it / 1000000000f}s") }
     }
 }
