@@ -19,8 +19,12 @@ object Day25 : Day(year = 2023) {
         }
         return visited.size
     }
-
-    // Used for generating dot file for GraphViz. Then add the three edges to the excluded set manually.
+    /**
+     * Used for generating dot file for GraphViz. Then add the three edges to the excluded set manually.
+     * ```
+     * dot -Tsvg day25.dot -o day25.svg
+     * ```
+     */
     override fun part2(): Any {
         val output = lines.flatMap { line ->
             val start = line.substringBefore(':')
