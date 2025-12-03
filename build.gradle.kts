@@ -1,18 +1,13 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
-    kotlin("jvm") version "1.9.21"
+    kotlin("jvm") version "2.2.21"
 }
 
 kotlin {
     jvmToolchain {
-        languageVersion.set(JavaLanguageVersion.of("16"))
+        languageVersion.set(JavaLanguageVersion.of(21))
     }
-}
-
-tasks.withType<KotlinCompile> {
-    kotlinOptions {
-        freeCompilerArgs += "-Xcontext-receivers"
+    compilerOptions {
+        freeCompilerArgs.add("-Xcontext-parameters")
     }
 }
 
@@ -24,11 +19,10 @@ sourceSets {
 
 tasks {
     wrapper {
-        gradleVersion = "8.5"
+        gradleVersion = "9.2.1"
     }
 }
 
 dependencies {
-    implementation("tools.aqua:z3-turnkey:4.12.2.1")
-//    implementation("com.microsoft.z3:4.11.2")
+    implementation("tools.aqua:z3-turnkey:4.14.1")
 }

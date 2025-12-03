@@ -11,21 +11,21 @@ import com.microsoft.z3.RealSort
 import com.microsoft.z3.Sort
 import java.math.BigDecimal
 
-context(Context)
+context(context: Context)
 operator fun <R : ArithSort> ArithExpr<R>.times(other: Expr<out R>): ArithExpr<R> =
-    mkMul(this, other)
+    context.mkMul(this, other)
 
-context(Context)
+context(context: Context)
 operator fun <R : ArithSort> ArithExpr<R>.plus(other: Expr<out R>): ArithExpr<R> =
-    mkAdd(this, other)
+    context.mkAdd(this, other)
 
-context(Context)
+context(context: Context)
 infix fun <R : Sort> Expr<R>.eq(other: Expr<R>): Expr<BoolSort> =
-    mkEq(this, other)
+    context.mkEq(this, other)
 
-context(Context)
+context(context: Context)
 val BigDecimal.real: RatNum
-    get() = mkReal(this.toPlainString())
+    get() = context.mkReal(this.toPlainString())
 
 operator fun Model.get(x: Expr<RealSort>): BigDecimal = (getConstInterp(x) as RatNum).let {
     it.bigIntNumerator.toBigDecimal() / it.bigIntDenominator.toBigDecimal()
