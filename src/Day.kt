@@ -2,6 +2,8 @@ import util.readLines
 import util.readText
 import java.time.Year
 import kotlin.system.measureNanoTime
+import kotlin.time.Duration.Companion.nanoseconds
+import kotlin.time.DurationUnit
 
 abstract class Day(
     protected val isTest: Boolean = false,
@@ -19,15 +21,15 @@ abstract class Day(
     protected open fun part2(): Any = ""
 
     operator fun invoke() {
-        println("● ${this::class.simpleName.orEmpty()}")
-        println("   ○ Part 1")
+        println(this::class.simpleName.orEmpty())
+        println("   Part 1")
         measureNanoTime {
             println("       Solution ${part1()}")
-        }.let { println("       Time ${it}ns | ${it / 1000f}μs | ${it / 1000000f}ms | ${it / 1000000000f}s") }
+        }.let { println("       Time ${it.nanoseconds.toString(unit = DurationUnit.SECONDS, decimals = 9)}") }
 
-        println("   ○ Part 2")
+        println("   Part 2")
         measureNanoTime {
             println("       Solution ${part2()}")
-        }.let { println("       Time ${it}ns | ${it / 1000f}μs | ${it / 1000000f}ms | ${it / 1000000000f}s") }
+        }.let { println("       Time ${it.nanoseconds.toString(unit = DurationUnit.SECONDS, decimals = 9)}") }
     }
 }
