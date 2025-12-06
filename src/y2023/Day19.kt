@@ -85,7 +85,7 @@ object Day19 : Day(year = 2023) {
 
     private fun evaluateParts(rangePart: RangePart, target: String, workFlows: List<WorkFlow>): Long =
         when (target) {
-            "A" -> rangePart.ratings.values.map { it.last - it.first + 1L }.product
+            "A" -> rangePart.ratings.values.map { it.last - it.first + 1L }.product()
             "R" -> 0L
             else -> workFlows.first { it.name == target }.evaluate(rangePart).sumOf {
                 evaluateParts(it.first, it.second, workFlows)

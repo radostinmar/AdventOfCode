@@ -52,17 +52,17 @@ object Day11 : Day(year = 2022) {
                 it.performTurn(monkeys) { value -> value / 3 }
             }
         }
-        return monkeys.map(Monkey::inspectedItems).sortedDescending().take(2).product
+        return monkeys.map(Monkey::inspectedItems).sortedDescending().take(2).product()
     }
 
     override fun part2(): Any {
         val monkeys = getMonkeys()
-        val divisor = monkeys.map(Monkey::testNumber).product
+        val divisor = monkeys.map(Monkey::testNumber).product()
         repeat(10000) {
             monkeys.forEach {
                 it.performTurn(monkeys) { value -> value % divisor }
             }
         }
-        return monkeys.map(Monkey::inspectedItems).sortedDescending().take(2).product
+        return monkeys.map(Monkey::inspectedItems).sortedDescending().take(2).product()
     }
 }

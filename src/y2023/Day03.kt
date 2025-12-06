@@ -37,7 +37,7 @@ object Day03 : Day(year = 2023) {
                 areAdjacent(sRow, sCol, numRow, matchResult.range)
             }
             if (adjacent.size == 2) {
-                adjacent.map { it.second.value.toInt() }.product
+                adjacent.map { it.second.value.toInt() }.product()
             } else {
                 0
             }

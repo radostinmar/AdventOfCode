@@ -17,7 +17,7 @@ object Day06 : Day(year = 2023) {
         val times = "\\d+".toRegex().findAll(lines[0]).map { it.value.toLong() }.toList()
         val records = "\\d+".toRegex().findAll(lines[1]).map { it.value.toLong() }.toList()
         return times.zip(records).productOf { (time, record) ->
-            findPossible(time, record).toInt()
+            findPossible(time, record)
         }
     }
 

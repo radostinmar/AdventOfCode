@@ -49,7 +49,7 @@ object Day17 : Day(year = 2023) {
                     if (direction.opposite == newDirection) {
                         return@forEach
                     }
-                    if (current.steps < minSteps && newDirection != current.direction) {
+                    if (current.steps < minSteps && newDirection != direction) {
                         return@forEach
                     }
                 }

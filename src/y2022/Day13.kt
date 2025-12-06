@@ -80,6 +80,6 @@ object Day13 : Day(year = 2022) {
             pair.split("\\R".toRegex())
         }.plus(dividers)
             .sortedWith(::compare)
-        return dividers.map { sorted.indexOf(it) + 1 }.product
+        return dividers.map { sorted.indexOf(it) + 1 }.product()
     }
 }

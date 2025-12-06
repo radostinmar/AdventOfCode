@@ -16,18 +16,18 @@ fun <T> T.println(): T {
     return this
 }
 
-val Iterable<Int>.product: Int
-    get() = this.reduce { acc, cur ->
+fun Iterable<Int>.product(): Int =
+    this.reduce { acc, cur ->
         acc * cur
     }
 
-val Iterable<Long>.product: Long
-    get() = this.reduce { acc, cur ->
+fun Iterable<Long>.product(): Long =
+    this.reduce { acc, cur ->
         acc * cur
     }
 
-fun <T> List<T>.productOf(selector: (T) -> Int): Int =
-    this.map { selector(it) }.product
+fun <T> List<T>.productOf(selector: (T) -> Long): Long =
+    this.map { selector(it) }.product()
 
 fun <T> List<T>.split(delimiter: T): List<List<T>> {
     var currentOffset = 0
@@ -84,4 +84,26 @@ fun <T> accumulate(times: Int, initial: T, operation: (acc: T, index: Int) -> T)
 
 fun MutableList<*>.swap(firstIndex: Int, secondIndex: Int) {
     swap(this, firstIndex, secondIndex)
+}
+
+fun <T> zip(lists: List<List<T>>): List<List<T>> {
+    return zip(lists, transform = { it })
+}
+
+fun <T, V> zip(lists: List<List<T>>, transform: (List<T>) -> V): List<V> {
+    val minSize = lists.minOfOrNull(List<T>::size) ?: return emptyList()
+    return List(minSize) { index ->
+        transform(lists.map { list -> list[index] })
+    }
+}
+
+fun <T> zipWithPadding(lists: List<List<T>>, padding: T): List<List<T>> {
+    return zipWithPadding(lists, transform = { it }, padding)
+}
+
+fun <T, V> zipWithPadding(lists: List<List<T>>, transform: (List<T>) -> V, padding: T): List<V> {
+    val maxSize = lists.maxOfOrNull(List<T>::size) ?: return emptyList()
+    return List(maxSize) { index ->
+        transform(lists.map { list -> list.getOrNull(index) ?: padding })
+    }
 }

@@ -19,7 +19,7 @@ object Day05 : Day(year = 2022) {
             val (amount, from, to) = "\\d+".toRegex().findAll(moveString).map { it.value.toInt() }.toList()
             move(stacks, amount, from, to)
         }
-        return stacks.joinToString("") { it.first.toString() }
+        return stacks.joinToString("") { it.first().toString() }
     }
 
     override fun part1(): Any = solve { stacks, amount, from, to ->
